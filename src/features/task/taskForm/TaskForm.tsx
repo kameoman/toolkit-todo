@@ -20,10 +20,13 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
     dispatch(createTask(data.taskTitle));
     reset();
   };
+  const handleEdit = (data: Inputs) => {
+    console.log(data);
+  };
   return (
     <div className={styles.root}>
       <form
-        onSubmit={handleSubmit(handleCreate)}
+        onSubmit={edit ? handleSubmit(handleEdit) : handleSubmit(handleCreate)}
         className={styles.form}
         noValidate
         autoComplete="off"
@@ -31,6 +34,8 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
         <TextField
           id="outlined-basic"
           label={edit ? "Edit Task" : "New Task"}
+          // フォームの中に値を入れておくかどうか
+          defaultValue={edit ? "defaultValue" : ""}
           variant="outlined"
           {...register("taskTitle", { required: true })}
           className={styles.text_field}
