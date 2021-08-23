@@ -35,13 +35,18 @@ export const taskSlice = createSlice({
       };
       state.tasks = [newTask, ...state.tasks];
     },
+    // modalの開くか閉じるかのフラグ管理
+    handleModalOpen: (state, action) =>{
+      state.isModalOpen = action.payload;
+    },
   },
 });
 
-export const { createTask } = taskSlice.actions;
+export const { createTask, handleModalOpen } = taskSlice.actions;
 
 export const selectTask = (state: RootState): TaskState["tasks"] =>
   state.task.tasks;
-// useSelector(selectTask)
+export const selectIsModalOpen = (state: RootState): TaskState["isModalOpen"] =>
+  state.task.isModalOpen;
 
 export default taskSlice.reducer;
