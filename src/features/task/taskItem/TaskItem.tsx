@@ -36,10 +36,7 @@ const TaskItem: React.FC<PropTypes> = ({ task }) => {
           inputProps={{ "aria-label": "primary checkbox" }}
           className={styles.checkbox}
         />
-        <button
-          onClick={handleOpen}
-          className={styles.edit_button}
-        >
+        <button onClick={handleOpen} className={styles.edit_button}>
           <EditIcon className={styles.icon} />
         </button>
         <button
@@ -52,10 +49,12 @@ const TaskItem: React.FC<PropTypes> = ({ task }) => {
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        className={styles.modal}
       >
-      <div>モーダル！！！！！！</div>
+        <div className={styles.modal_content}>
+          <div className={styles.modal_title}>Edit</div>
+          <TaskForm edit/>
+        </div>
       </Modal>
     </div>
   );
