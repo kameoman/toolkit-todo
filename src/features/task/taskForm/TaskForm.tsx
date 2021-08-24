@@ -1,8 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import TextField from "@material-ui/core/TextField";
-import { createTask, handleModalOpen } from "../taskSlice";
+import {
+  createTask,
+  editTask,
+  handleModalOpen,
+  selectSelectedTask,
+} from "../taskSlice";
 import styles from "./TaskForm.module.scss";
 
 type Inputs = {
@@ -15,13 +20,16 @@ type PropTypes = {
 
 const TaskForm: React.FC<PropTypes> = ({ edit }) => {
   const dispatch = useDispatch();
+  const selectedTask = useSelector(selectSelectedTask);
   const { register, handleSubmit, reset } = useForm();
   const handleCreate = (data: Inputs) => {
     dispatch(createTask(data.taskTitle));
     reset();
   };
   const handleEdit = (data: Inputs) => {
-    console.log(data);
+    const sendData = { ...selectedTask, title: data.taskTitle };
+    dispatch(editTask(sendData));
+    dispatch(handleModalOpen(false));
   };
   return (
     <div className={styles.root}>
@@ -35,7 +43,7 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
           id="outlined-basic"
           label={edit ? "Edit Task" : "New Task"}
           // フォームの中に値を入れておくかどうか
-          defaultValue={edit ? "defaultValue" : ""}
+          defaultValue={edit ? selectedTask.title : ""}
           variant="outlined"
           {...register("taskTitle", { required: true })}
           className={styles.text_field}

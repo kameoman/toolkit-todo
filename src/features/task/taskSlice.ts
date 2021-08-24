@@ -35,24 +35,35 @@ export const taskSlice = createSlice({
       };
       state.tasks = [newTask, ...state.tasks];
     },
+    // taskの編集
+    editTask: (state, action) => {
+      // state.taskから指定したtaskを抜き出して編集
+      const task = state.tasks.find((t) => t.id === action.payload.id);
+      if (task) {
+        // 抜き出してきたタイトルを書き換える
+        task.title = action.payload.title;
+      }
+    },
     // どのtaskを選択しているかを管理
-    selectTask: (state,action)=> {
-      state.selectedTask=action.payload;
+    selectTask: (state, action) => {
+      state.selectedTask = action.payload;
     },
     // modalの開くか閉じるかのフラグ管理
-    handleModalOpen: (state, action) =>{
+    handleModalOpen: (state, action) => {
       state.isModalOpen = action.payload;
     },
   },
 });
 
-export const { createTask, selectTask, handleModalOpen } = taskSlice.actions;
+export const { createTask, editTask, selectTask, handleModalOpen } =
+  taskSlice.actions;
 
 export const selectTasks = (state: RootState): TaskState["tasks"] =>
   state.task.tasks;
 export const selectIsModalOpen = (state: RootState): TaskState["isModalOpen"] =>
   state.task.isModalOpen;
-export const selectSelectedTask = (state: RootState): TaskState["selectedTask"] =>
-  state.task.selectedTask;
+export const selectSelectedTask = (
+  state: RootState
+): TaskState["selectedTask"] => state.task.selectedTask;
 
 export default taskSlice.reducer;
