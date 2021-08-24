@@ -9,6 +9,7 @@ import {
   selectTask,
   completeTask,
   handleModalOpen,
+  deleteTask,
   selectIsModalOpen,
 } from "../taskSlice";
 import TaskForm from "../taskForm/TaskForm";
@@ -46,7 +47,7 @@ const TaskItem: React.FC<PropTypes> = ({ task }) => {
           <EditIcon className={styles.icon} />
         </button>
         <button
-          onClick={() => console.log(`delete ${task.id}`)}
+          onClick={() => dispatch(deleteTask(task))}
           className={styles.delete_button}
         >
           <DeleteIcon className={styles.icon} />
