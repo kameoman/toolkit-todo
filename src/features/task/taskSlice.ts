@@ -27,11 +27,11 @@ export const fetchTasks = createAsyncThunk("task/getAllTasks", async () => {
   const allTasks = res.docs.map((doc) => ({
     id: doc.id,
     title: doc.data().title,
-    completes: doc.data().completed,
+    completed: doc.data().completed,
   }));
 
-  const taskNumber=allTasks.length:
-  const passData = { allTasks, taskNumber};
+  const taskNumber = allTasks.length;
+  const passData = { allTasks, taskNumber };
   return passData;
 });
 
@@ -42,22 +42,22 @@ export const taskSlice = createSlice({
   reducers: {
     // taskの作成
     createTask: (state, action) => {
-      state.idCount++;
-      const newTask = {
-        id: state.idCount,
-        title: action.payload,
-        completed: false,
-      };
-      state.tasks = [newTask, ...state.tasks];
+      // state.idCount++;
+      // const newTask = {
+      //   id: state.idCount,
+      //   title: action.payload,
+      //   completed: false,
+      // };
+      // state.tasks = [newTask, ...state.tasks];
     },
     // taskの編集
     editTask: (state, action) => {
       // state.taskから指定したtaskを抜き出して編集
-      const task = state.tasks.find((t) => t.id === action.payload.id);
-      if (task) {
-        // 抜き出してきたタイトルを書き換える
-        task.title = action.payload.title;
-      }
+      // const task = state.tasks.find((t) => t.id === action.payload.id);
+      // if (task) {
+      //   // 抜き出してきたタイトルを書き換える
+      //   task.title = action.payload.title;
+      // }
     },
     // どのtaskを選択しているかを管理
     selectTask: (state, action) => {
@@ -69,23 +69,23 @@ export const taskSlice = createSlice({
     },
     // taskの完了・未完了の変更
     completeTask: (state, action) => {
-      const task = state.tasks.find((t) => t.id === action.payload.id);
-      if (task) {
-        // 抜き出したtaskのcompletedを反転させる
-        task.completed = !task.completed;
-      }
+      // const task = state.tasks.find((t) => t.id === action.payload.id);
+      // if (task) {
+      //   // 抜き出したtaskのcompletedを反転させる
+      //   task.completed = !task.completed;
+      // }
     },
     // taskの削除
     deleteTask: (state, action) => {
-      state.tasks = state.tasks.filter((t) => t.id !== action.payload.id);
+      // state.tasks = state.tasks.filter((t) => t.id !== action.payload.id);
     },
   },
-  extraReducers:(builder)=>{
-    builder.addCase(fetchTasks.fulfilled,(state,action)=>{
-      state.tasks=action.payload.allTasks;
+  extraReducers: (builder) => {
+    builder.addCase(fetchTasks.fulfilled, (state, action) => {
+      state.tasks = action.payload.allTasks;
       state.idCount = action.payload.taskNumber;
-    })
-  }
+    });
+  },
 });
 
 export const {
