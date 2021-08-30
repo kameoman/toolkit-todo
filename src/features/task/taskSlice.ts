@@ -80,6 +80,12 @@ export const taskSlice = createSlice({
       state.tasks = state.tasks.filter((t) => t.id !== action.payload.id);
     },
   },
+  extraReducers:(builder)=>{
+    builder.addCase(fetchTasks.fulfilled,(state,action)=>{
+      state.tasks=action.payload.allTasks;
+      state.idCount = action.payload.taskNumber;
+    })
+  }
 });
 
 export const {
