@@ -1,24 +1,39 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../../app/store";
 import { useSelector } from "react-redux";
+import { db } from "../../firebase";
 
 interface TaskState {
   // タスクの数量を管理する
   idCount: number;
   // storeに保存するタスクの一覧
-  tasks: { id: number; title: string; completed: boolean }[];
+  tasks: { id: string; title: string; completed: boolean }[];
   // taskのtitleを編集する際にどのtaskが選択されているかを知るため
-  selectedTask: { id: number; title: string; completed: boolean };
+  selectedTask: { id: string; title: string; completed: boolean };
   // モーダルの入力で開くか閉じるかを判定する
   isModalOpen: boolean;
 }
 
 const initialState: TaskState = {
   idCount: 1,
-  tasks: [{ id: 1, title: "Task A", completed: false }],
-  selectedTask: { id: 0, title: "", completed: false },
+  tasks: [],
+  selectedTask: { id: "", title: "", completed: false },
   isModalOpen: false,
 };
+// タスクの全件取得
+export const fetchTasks = createAsyncThunk("task/getAllTasks", async () => {
+  const res = await db.collection("tasks").orderBy("dateTime", "desc").get();
+
+  const allTasks = res.docs.map((doc) => ({
+    id: doc.id,
+    title: doc.data().title,
+    completes: doc.data().completed,
+  }));
+
+  const taskNumber=allTasks.length:
+  const passData = { allTasks, taskNumber};
+  return passData;
+});
 
 export const taskSlice = createSlice({
   name: "task",
