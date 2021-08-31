@@ -68,6 +68,16 @@ export const editTask = async (submitData: {
     console.log("Error updating document:", err);
   }
 };
+
+// タスクの削除
+export const deleteTask = async (id: string): Promise<void> => {
+  try {
+    await db.collection("tasks").doc(id).delete();
+  } catch (err) {
+    console.log("Error removing document:", err);
+  }
+};
+
 export const taskSlice = createSlice({
   name: "task",
   initialState,
@@ -82,9 +92,6 @@ export const taskSlice = createSlice({
       state.isModalOpen = action.payload;
     },
     // taskの削除
-    deleteTask: (state, action) => {
-      // state.tasks = state.tasks.filter((t) => t.id !== action.payload.id);
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTasks.fulfilled, (state, action) => {
@@ -94,7 +101,7 @@ export const taskSlice = createSlice({
   },
 });
 
-export const { deleteTask, selectTask, handleModalOpen } = taskSlice.actions;
+export const { selectTask, handleModalOpen } = taskSlice.actions;
 
 export const selectTasks = (state: RootState): TaskState["tasks"] =>
   state.task.tasks;
