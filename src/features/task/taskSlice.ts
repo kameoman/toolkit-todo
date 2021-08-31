@@ -50,20 +50,29 @@ export const createTask = async (title: string): Promise<void> => {
   }
 };
 
+// タスクの編集
+export const editTask = async (submitData: {
+  id: string;
+  title: string;
+  completed: boolean;
+}): Promise<void> => {
+  const { id, title, completed } = submitData;
+  const dateTime = firebase.firestore.Timestamp.fromDate(new Date());
+  try {
+    await db
+      .collection("tasks")
+      .doc(id)
+      // 同じ内容がある場合にはmerge合体させる
+      .set({ title, completed, dateTime }, { merge: true });
+  } catch (err) {
+    console.log("Error updating document:", err);
+  }
+};
 export const taskSlice = createSlice({
   name: "task",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    // taskの編集
-    editTask: (state, action) => {
-      // state.taskから指定したtaskを抜き出して編集
-      // const task = state.tasks.find((t) => t.id === action.payload.id);
-      // if (task) {
-      //   // 抜き出してきたタイトルを書き換える
-      //   task.title = action.payload.title;
-      // }
-    },
     // どのtaskを選択しているかを管理
     selectTask: (state, action) => {
       state.selectedTask = action.payload;
@@ -71,14 +80,6 @@ export const taskSlice = createSlice({
     // modalの開くか閉じるかのフラグ管理
     handleModalOpen: (state, action) => {
       state.isModalOpen = action.payload;
-    },
-    // taskの完了・未完了の変更
-    completeTask: (state, action) => {
-      // const task = state.tasks.find((t) => t.id === action.payload.id);
-      // if (task) {
-      //   // 抜き出したtaskのcompletedを反転させる
-      //   task.completed = !task.completed;
-      // }
     },
     // taskの削除
     deleteTask: (state, action) => {
@@ -93,13 +94,7 @@ export const taskSlice = createSlice({
   },
 });
 
-export const {
-  editTask,
-  deleteTask,
-  completeTask,
-  selectTask,
-  handleModalOpen,
-} = taskSlice.actions;
+export const { deleteTask, selectTask, handleModalOpen } = taskSlice.actions;
 
 export const selectTasks = (state: RootState): TaskState["tasks"] =>
   state.task.tasks;
