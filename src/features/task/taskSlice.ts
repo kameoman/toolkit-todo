@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import firebase from "firebase/app";
 import { RootState, AppThunk } from "../../app/store";
 import { useSelector } from "react-redux";
 import { db } from "../../firebase";
@@ -35,21 +36,25 @@ export const fetchTasks = createAsyncThunk("task/getAllTasks", async () => {
   return passData;
 });
 
+// タスクの新規作成
+export const createTask = async (title: string): Promise<void> => {
+  try {
+    // 現在時刻の取得
+    const dateTime = firebase.firestore.Timestamp.fromDate(new Date());
+    // firestoreタスクコレクションに追加（データ追加）
+    await db
+      .collection("tasks")
+      .add({ title: title, completed: false, dateTime: dateTime });
+  } catch (err) {
+    console.log("Error writing document: ", err);
+  }
+};
+
 export const taskSlice = createSlice({
   name: "task",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    // taskの作成
-    createTask: (state, action) => {
-      // state.idCount++;
-      // const newTask = {
-      //   id: state.idCount,
-      //   title: action.payload,
-      //   completed: false,
-      // };
-      // state.tasks = [newTask, ...state.tasks];
-    },
     // taskの編集
     editTask: (state, action) => {
       // state.taskから指定したtaskを抜き出して編集
@@ -89,7 +94,6 @@ export const taskSlice = createSlice({
 });
 
 export const {
-  createTask,
   editTask,
   deleteTask,
   completeTask,
