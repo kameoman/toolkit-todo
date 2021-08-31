@@ -29,10 +29,11 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
     reset();
     dispatch(fetchTasks());
   };
-  const handleEdit = (data: Inputs) => {
+  const handleEdit = async (data: Inputs) => {
     const sendData = { ...selectedTask, title: data.taskTitle };
-    dispatch(editTask(sendData));
+    await editTask(sendData);
     dispatch(handleModalOpen(false));
+    dispatch(fetchTasks());
   };
   return (
     <div className={styles.root}>
