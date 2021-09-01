@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { RouteComponentProps } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,6 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { register } from "../../serviceWorker";
+import { auth } from "../../firebase";
 
 function Copyright() {
   return (
@@ -53,7 +55,7 @@ interface AuthDataTypes {
   password: string;
 }
 
-const UserAuth: React.FC = () => {
+const UserAuth: React.FC<RouteComponentProps>= (props) => {
   const classes = useStyles();
   const {
     register,
@@ -62,7 +64,28 @@ const UserAuth: React.FC = () => {
   } = useForm<AuthDataTypes>();
   // サインイン・サインアップを管理
   const [isSignIn, setIsSignIn] = useState(true);
+  // ログイン処理
+  const handleSignIn = async (data: AuthDataTypes) => {
+    // dataの中から抽出する
+    const { email, password } = data;
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      props.history.push("/");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
+  // 新規登録処理
+  const handleSignUp = async (data: AuthDataTypes) => {
+    const { email, password } = data;
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+      props.history.push("/");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -167,7 +190,9 @@ const UserAuth: React.FC = () => {
                 variant="body2"
                 onClick={() => setIsSignIn(!isSignIn)}
               >
-                {isSignIn ? "アカウントお持ちでない方はこちら" : "アカウントお持ちの方はこちら"}
+                {isSignIn
+                  ? "アカウントお持ちでない方はこちら"
+                  : "アカウントお持ちの方はこちら"}
               </Link>
             </Grid>
           </Grid>
