@@ -55,7 +55,7 @@ interface AuthDataTypes {
   password: string;
 }
 
-const UserAuth: React.FC<RouteComponentProps>= (props) => {
+const UserAuth: React.FC<RouteComponentProps> = (props) => {
   const classes = useStyles();
   const {
     register,
@@ -96,7 +96,13 @@ const UserAuth: React.FC<RouteComponentProps>= (props) => {
         <Typography component="h1" variant="h5">
           {isSignIn ? "ログイン" : "新規登録"}
         </Typography>
-        <form className={classes.form} noValidate>
+        <form
+          onSubmit={
+            isSignIn ? handleSubmit(handleSignIn) : handleSubmit(handleSignUp)
+          }
+          className={classes.form}
+          noValidate
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
