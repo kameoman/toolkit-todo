@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -60,6 +60,8 @@ const UserAuth: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<AuthDataTypes>();
+  // サインイン・サインアップを管理
+  const [isSignIn, setIsSignIn] = useState(true);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -69,7 +71,7 @@ const UserAuth: React.FC = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          {isSignIn ? "ログイン" : "新規登録"}
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -156,12 +158,16 @@ const UserAuth: React.FC = () => {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            {isSignIn ? "ログインする" : "新規登録する"}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
+              <Link
+                href="#"
+                variant="body2"
+                onClick={() => setIsSignIn(!isSignIn)}
+              >
+                {isSignIn ? "アカウントお持ちでない方はこちら" : "アカウントお持ちの方はこちら"}
               </Link>
             </Grid>
           </Grid>
