@@ -1,4 +1,5 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +13,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { register } from "../../serviceWorker";
 
 function Copyright() {
   return (
@@ -46,8 +48,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface AuthDataTypes {
+  email: string;
+  password: string;
+}
+
 const UserAuth: React.FC = () => {
   const classes = useStyles();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuthDataTypes>();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -61,29 +73,6 @@ const UserAuth: React.FC = () => {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -91,8 +80,36 @@ const UserAuth: React.FC = () => {
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
+                // name="email"
                 autoComplete="email"
+                // サイトを開いた時に自動で選択される
+                autoFocus
+                // エラー発生時にtrueになる
+                error={Boolean(errors.email)}
+                // バリデーションエラー
+                helperText={errors.email && errors.email.message}
+                // inputRef={register({
+                //   required: {
+                //     value: true,
+                //     message: "メールアドレスを入力してください",
+                //   },
+                //   pattern: {
+                // value:
+                //   /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
+                // message: "メールアドレスを正しい形式で入力してください",
+                //   },
+                // })}
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "メールアドレスを入力してください",
+                  },
+                  pattern: {
+                    value:
+                      /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
+                    message: "メールアドレスを正しい形式で入力してください",
+                  },
+                })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -100,17 +117,35 @@ const UserAuth: React.FC = () => {
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
+                // name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+                error={Boolean(errors.password)}
+                // バリデーションエラー
+                helperText={errors.password && errors.password.message}
+                // inputRef={register({
+                //   required: {
+                //     value: true,
+                //     message: "メールアドレスを入力してください",
+                //   },
+                //   pattern: {
+                //     value:
+                //       /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
+                //     message: "メールアドレスを正しい形式で入力してください",
+                //   },
+                // })}
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "パスワードを入力してください",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "パスワードを6文字以上で入力してください",
+                  },
+                })}
               />
             </Grid>
           </Grid>
