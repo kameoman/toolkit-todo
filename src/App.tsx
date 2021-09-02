@@ -13,6 +13,12 @@ const App: React.FC<RouteComponentProps> = (props) => {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      !user && props.history.push("user-auth");
+    });
+  }, []);
+
+  useEffect(() => {
     const getData = () => {
       dispatch(fetchTasks());
     };
